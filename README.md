@@ -1,34 +1,47 @@
-# tello_driver [![Build Status](http://build.ros.org/job/Ksrc_uX__tello_driver__ubuntu_xenial__source/badge/icon)](http://build.ros.org/job/Ksrc_uX__tello_driver__ubuntu_xenial__source/)
+# Tello ROS driver 
 
-# 1. Overview
-Communicating with the Tello drone can be done either using official [Tello SDK](https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf) or one of the unofficial libraries. The unofficial libraries originated from the reverse-engineering the raw packages broadcasted by the Tello. This ROS package is build on top of the unofficial [TelloPy](https://github.com/hanyazou/TelloPy) library. The [TelloPy](https://github.com/hanyazou/TelloPy) library is used at this moment since it offers more functionalities than the official [Tello SDK](https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf) or any other unofficial library. 
-
-Developing of the tello_driver ROS package is inspired by [tello_driver](https://github.com/anqixu/tello_driver), which by now diverged considerately from the original work. Furthermore, development of this ROS package pursues not to modify the TelloPy library, but instead apply any modification or addition to the ros_driver package in an encapsulated manner. This prevents breaking functionalities when updating the TelloPy library.
+ROS driver used in the course DTEK0081 Perception and Navigation in Robotics
 
 ## Installation
 
-### ROS distribution  
-Binary release from the ROS repository:  
-* Kinetic: ``` $ sudo apt install ros-kinetic-tello-driver```
+We will use by default the same workspace as for the drone-racing repo: [https://github.com/TIERS/drone-racing](https://github.com/TIERS/drone-racing).
 
-### Build from source
-* ```$ cd <CATKIN_WS/SRC>```
-* ```$ git clone --recursive https://github.com/appie-17/tello_driver.git```
-* ```$ cd ..```
-* ```$ catkin_make```
-* ```$ source devel/setup.bash```
+If you don't have it, create the workspace and clone this repo
+```
+mkdir -p  ~/drone_racing_ws/src && cd ~/drone_racing_ws/src
+git clone --recursive https://github.com/TIERS/tello-driver-ros.git
+```
+
+And build it
+```
+catkin init
+catkin build
+```
 
 ## Launch
 
-* Turn on Tello drone
-* Connect to drone's WiFi access point (```TELLO_XXXXXX)```
-* ```$ roslaunch tello_driver tello_node.launch```
-* ```$ roslaunch tello_driver joy_teleop.launch```
+- Turn on Tello drone
+- Connect to drone's WiFi access point (`TELLO_XXXXXX`)
 
-# 2. Nodes
+Then launch the driver
+```
+source ~/drone_racing_ws/devel/setup.bash
+roslaunch tello_driver tello_node.launch
+```
 
-## 2.1 tello_driver_node
-Main node running as interface for the TelloPy library
+You can control it with the `teleop_twist_keyboard` node. Install it with
+```
+sudo apt install ros-melodic-teleop-twist-keyboard
+```
+
+and run it
+```
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/tello/cmd_vel
+```
+
+
+
+## ROS Nodes
 
 ### Subscribed topics
 * ```/tello/cmd_vel``` [geometry_msgs/Twist](http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html)
@@ -50,9 +63,6 @@ Main node running as interface for the TelloPy library
 * ```/tello/imu``` [sensor_msgs/Imu](http://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
 * ```/tello/status``` [tello_driver/TelloStatus](https://github.com/appie-17/tello_driver/blob/development/msg/TelloStatus.msg)
 
-### Services
-TODO
-
 ### Parameters
 * ```~/tello_driver_node/connect_timeout_sec```
 * ```~/tello_driver_node/fixed_video_rate```
@@ -67,60 +77,9 @@ TODO
 * ```~/tello_driver_node/attitude_limit```
 * ```~/tello_driver_node/low_bat_threshold```
 
-## 2.2 gamepad_teleop_node
-Converting gamepad input controls from ```joy_node``` to commands for ```tello_driver_node```
 
-### Subscribed topics
-* ```/joy``` [sensor_msgs/Joy](http://docs.ros.org/api/sensor_msgs/html/msg/Joy.html)
-* ```/tello/agent_cmd_vel_in``` [geometry_msgs/Twist](http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html)
+## Contact
 
-### Published topic
-* ```/tello/cmd_vel``` [geometry_msgs/Twist](http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html)
-* ```/tello/emergency``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/fast_mode``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/flattrim``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/flip``` [std_msgs/Uint8](http://docs.ros.org/api/std_msgs/html/msg/UInt8.html)
-* ```/tello/land``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/palm_land``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/takeoff``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
-* ```/tello/throw_takeoff``` [std_msgs/Empty](http://docs.ros.org/api/std_msgs/html/msg/Empty.html)
+For any questions, write to `jopequ@utu.fi`.
 
-### Services
-None
-
-### Parameters
-
-## 2.3 joy_node
-Receive input from gamepad controller and publish into ```sensor_msgs/Joy``` message
-
-### Subscribed topics
-None
-
-### Published topics
-* ```/joy``` [sensor_msgs/Joy](http://docs.ros.org/api/sensor_msgs/html/msg/Joy.html)
-
-### Services
-None 
-
-### Parameters
-* ```~/joy_node/deadzone```
-* ```~/joy_node/dev```
-
-# 3. Troubleshooting
-  * **No more video output after reconnect**  
-  Relaunch the ```tello_driver_node``` to continue the video stream after WiFi reconnection. Only an issue when using PyAV to decode h264 video instead of ROS [codec_image_transport](https://github.com/yoshito-n-students/codec_image_transport).
-
-# 4. Notes
-* **Stream raw video**  
-   Depends on [PyAV](https://github.com/mikeboers/PyAV) package: ```$ pip install av --user```  
-   
-   Installation of PyAV on Ubuntu 16.04 requires ffmpeg of at least version 3:  
-   
-   ```$ sudo add-apt-repository ppa:jonathonf/ffmpeg-3```  
-   ```$ sudo apt update && sudo apt install ffmpeg```  
-
-# 5. Work-in-progress
-
-# 6. License
-
-
+Visit us at [https://tiers.utu.fi](https://tiers.utu.fi)
