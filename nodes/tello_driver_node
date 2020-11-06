@@ -81,7 +81,7 @@ class TelloNode(tello.Tello):
             rospy.get_param('~local_cmd_client_port', 8890))
         self.local_vid_server_port = int(
             rospy.get_param('~local_vid_server_port', 6038))
-        self.tello_ip = rospy.get_param('~tello_ip', '192.168.10.1')
+        self.tello_ip = rospy.get_param('~tello_ip', '192.168.0.88')
         self.tello_cmd_server_port = int(
             rospy.get_param('~tello_cmd_server_port', 8889))
         self.connect_timeout_sec = float(
@@ -99,7 +99,7 @@ class TelloNode(tello.Tello):
         self.fast_mode = False        
 #########################################END#######################################    
 
-        super(TelloNode, self).__init__(port=9000)
+        super(TelloNode, self).__init__(ip=self.tello_ip, port=self.tello_cmd_server_port, own_port=self.local_cmd_client_port)
         rospy.loginfo('Connecting to drone @ %s:%d' % self.tello_addr)
         self.connect()
         try:
