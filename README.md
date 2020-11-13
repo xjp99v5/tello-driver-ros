@@ -12,6 +12,11 @@ mkdir -p  ~/drone_racing_ws/src && cd ~/drone_racing_ws/src
 git clone --recursive https://github.com/TIERS/tello-driver-ros.git
 ```
 
+Instanll dependency
+```
+sudo apt install ros-melodic-camera-info-manager-py python-catkin-tools
+```
+
 And build it
 ```
 catkin init
