@@ -15,6 +15,7 @@ git clone --recursive https://github.com/TIERS/tello-driver-ros.git
 Instanll dependency
 ```
 sudo apt install ros-melodic-camera-info-manager-py ros-melodic-codec-image-transport python-catkin-tools
+pip3 install https://github.com/damiafuentes/DJITelloPy/archive/master.zip
 ```
 
 And build it
