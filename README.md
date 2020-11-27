@@ -21,6 +21,7 @@ sudo -H pip3 install https://github.com/damiafuentes/DJITelloPy/archive/master.z
 
 And build it
 ```
+cd ~/drone_racing_ws
 catkin init
 catkin build
 ```
