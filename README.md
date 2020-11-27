@@ -25,7 +25,7 @@ catkin init
 catkin build
 ```
 
-## Launch
+## Launch for Tello with its own Wi-Fi AP
 
 - Turn on Tello drone
 - Connect to drone's WiFi access point (`TELLO_XXXXXX`)
@@ -33,7 +33,7 @@ catkin build
 Then launch the driver
 ```
 source ~/drone_racing_ws/devel/setup.bash
-roslaunch tello_driver tello_node.launch
+roslaunch tello_driver tello_node.launch tello_ip:="192.168.10.1"
 ```
 
 You can control it with the `teleop_twist_keyboard` node. Install it with
@@ -46,6 +46,16 @@ and run it
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/tello/cmd_vel
 ```
 
+## Launch for Tello Edo connected to same Wi-Fi network
+
+- Turn on Tello EDU drone
+- Check IP (for the course, they are written on top of the drone)
+
+Then launch the driver modifying the IP
+```
+source ~/drone_racing_ws/devel/setup.bash
+roslaunch tello_driver tello_node.launch tello_ip:="192.168.XXX.XXX"
+```
 
 
 ## ROS Nodes
