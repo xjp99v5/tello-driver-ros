@@ -1,6 +1,10 @@
 # Tello ROS driver 
 
-ROS driver used in the course DTEK0081 Perception and Navigation in Robotics
+ROS driver used in the multi-agent reinforcement learning control for drones.
+
+
+fork from [TIERS/tello-driver-ros](https://github.com/TIERS/tello-driver-ros)
+
 
 ## Installation
 
